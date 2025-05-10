@@ -819,6 +819,7 @@ MonoBehaviour:
   walkSpeed: 5
   jumpHeight: 1.5
   gravity: -9.81
+  sprintSpeed: 10
   cameraTransform: {fileID: 330585546}
   mouseSensitivity: 100
   xClamp: 85

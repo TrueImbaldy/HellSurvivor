@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     public float walkSpeed = 5f;
     public float jumpHeight = 1.5f;
     public float gravity = -9.81f;
+    public float sprintSpeed = 10f;
+    
 
     [Header("Look Settings")]
     public Transform cameraTransform; //Reference to the camera
@@ -20,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 lookInput;
     private Vector3 velocity;
     private bool isGrounded;
+    private bool isSprinting;
 
     private float xRotation = 0f;
     private InputAction escapeAction; //Reference to the escape action
@@ -32,6 +35,9 @@ public class PlayerMovement : MonoBehaviour
 
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+
+        controls.Player.Sprint.performed += ctx => isSprinting = true;
+        controls.Player.Sprint.canceled += ctx => isSprinting = false;
 
         controls.Player.Look.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
         controls.Player.Look.canceled += ctx => lookInput = Vector2.zero;
@@ -105,8 +111,9 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = -2f;
         }
 
+        float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
-        controller.Move(move * walkSpeed * Time.deltaTime);
+        controller.Move(move * currentSpeed * Time.deltaTime);
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
